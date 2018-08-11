@@ -1,14 +1,14 @@
 .reveal section .plain img {
-    border: 0;
-    box-shadow: none;
+  border: 0;
+  box-shadow: none;
 }
 
 .reveal pre code {
-    display: block;
-    padding: 5px;
-    overflow: auto;
-    max-height: 30em;
-    word-wrap: normal;
+  display: block;
+  padding: 5px;
+  overflow: auto;
+  max-height: 30em;
+  word-wrap: normal;
 }
 
 /* #gradle-wrapper-search-script code {
@@ -17,8 +17,8 @@
 } */
 
 div.smaller {
-    font-size: 50%;
-    line-height: normal;
+  font-size: 50%;
+  line-height: normal;
 }
 
 /* #modularizing-your-logic-list ul {
@@ -32,30 +32,105 @@ div.smaller {
 } */
 
 div.listingblock div.title {
-    text-align: left;
-    font-size: 0.7em;
-    font-family: monospace;
+  text-align: left;
+  font-size: 0.7em;
+  font-family: monospace;
 }
 
 div.listingblock div.title + div.content pre {
-    margin-top: 0;
+  margin-top: 0;
 }
 
 #q-a h2 {
-    font-size: 10em;
-    top: -100px;
-    position: absolute;
-    color: #ffff00;
-    text-shadow: 12px 11px 10px rgba(0, 0, 0, 0.99);
+  font-size: 10em;
+  top: -100px;
+  position: absolute;
+  color: #ffff00;
+  text-shadow: 12px 11px 10px rgba(0, 0, 0, 0.99);
 }
 
 #incremental-testing code {
-    font-size: 0.8em;
-    max-height: 700px;
-    line-height: normal;
+  font-size: 0.8em;
+  max-height: 700px;
+  line-height: normal;
 }
 
 .license {
-    font-size: 0.5em;
-    line-height: normal;
+  font-size: 0.5em;
+  line-height: normal;
+}
+
+/*
+ * Source code formatting
+ */
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  background: #282a36;
+}
+
+.hljs-built_in,
+.hljs-selector-tag,
+.hljs-section,
+.hljs-link {
+  color: #8be9fd;
+}
+
+.hljs-keyword {
+  color: #ff79c6;
+}
+
+.hljs {
+  color: #f8f8f2;
+}
+
+.hljs-subst {
+  color: #48ff42;
+}
+
+.hljs-title {
+  color: #50fa7b;
+}
+
+.hljs-string,
+.hljs-meta,
+.hljs-name,
+.hljs-type,
+.hljs-attr,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition,
+.hljs-variable,
+.hljs-template-tag,
+.hljs-template-variable {
+  color: #f1fa8c;
+}
+
+.hljs-comment,
+.hljs-quote,
+.hljs-deletion {
+  color: #6272a4;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-title,
+.hljs-section,
+.hljs-doctag,
+.hljs-type,
+.hljs-name,
+.hljs-strong {
+  font-weight: bold;
+}
+
+.hljs-literal,
+.hljs-number {
+  color: #bd93f9;
+}
+
+.hljs-emphasis {
+  font-style: italic;
 }

@@ -2,8 +2,8 @@
 link.rel = 'stylesheet';
 link.type = 'text/css';
 link.href = window.location.search.match( /print-pdf/gi ) ? "https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/print/pdf.css" : "https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/print/paper.css";
-document.getElementsByTagName( 'head' )[0].appendChild( link );</script><!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/lib/js/html5shiv.js"></script><![endif]--><link rel="stylesheet" href="./preso.css"></head><body><div class="reveal"><div class="slides"><section class="title" data-state="title"><h1>Kotlin Intro</h1><div class="preamble"><div class="paragraph"><p>as of 1.2</p></div>
-<div class="imageblock plain" style=""><img src="images/kotlin-logo-text.png" alt="kotlin logo text" height="200px"></div>
+document.getElementsByTagName( 'head' )[0].appendChild( link );</script><!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/lib/js/html5shiv.js"></script><![endif]--><link rel="stylesheet" href="./preso.css"></head><body><div class="reveal"><div class="slides"><section class="title" data-state="title"><h1>Kotlin Intro</h1><div class="preamble"><div class="imageblock plain" style=""><img src="images/kotlin-logo.png" alt="kotlin logo" height="200px"></div>
+<div class="paragraph"><p>as of 1.2</p></div>
 <br/><br/><div class="content" style="display: flex; text-align: center;">
 <p style="font-size: 0.5em; width: 100%"><a rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a>
@@ -11,7 +11,76 @@ document.getElementsByTagName( 'head' )[0].appendChild( link );</script><!--[if 
 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Jim J. Moore</span> is licensed under
 a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.<br />
 Presentation source at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/jdigger/kotlin-intro-preso" rel="dct:source">https://github.com/jdigger/kotlin-intro-preso</a></p></div></div></section>
-<section id="overview"><h2>Overview</h2><div class="olist arabic"><ol class="arabic"><li><p>Intro</p></li></ol></div></section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/lib/js/head.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/js/reveal.js"></script><script>// See https://github.com/hakimel/reveal.js#configuration for a full list of configuration options
+<section id="overview"><h2>Overview</h2><div class="olist arabic"><ol class="arabic"><li><p>Intro</p></li></ol></div></section>
+<section id="motivations"><h2>Motivations</h2><div class="ulist"><ul><li><p>Statically typed (JVM and JS)</p></li><li><p>Safe, concise, great interop</p></li><li><p>Functional and OO paradigms</p></li><li><p>Focus on pragmatism</p></li></ul></div></section>
+<section id="so_many_nice_languages"><div class="quoteblock"><blockquote>We&#8217;ve built tools to support so many nice languages, and we’re still using Java</blockquote><div class="attribution">&#8212; JetBrains, 2010</div></div></section>
+<section id="effective_java" data-background-image="images/EffectiveJava.jpg" data-background-size="contain"></section>
+<section id="example_kotlin"><h2>Example Kotlin</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">class Person(val firstName: String, val lastName: String) {
+    val fullName: String get() = "$firstName $lastName"
+}</code></pre></div></div></section>
+<section id="example_to_java"><h2>Example to Java</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="java language-java">public final class Person {
+   @NotNull
+   private final String firstName;
+   @NotNull
+   private final String lastName;
+
+   public Person(@NotNull String firstName, @NotNull String lastName) {
+      Intrinsics.checkParameterIsNotNull(firstName, "firstName");
+      Intrinsics.checkParameterIsNotNull(lastName, "lastName");
+      super();
+      this.firstName = firstName;
+      this.lastName = lastName;
+   }
+
+   @NotNull
+   public final String getFullName() {
+      return this.firstName + ' ' + this.lastName;
+   }
+
+   @NotNull
+   public final String getFirstName() {
+      return this.firstName;
+   }
+
+   @NotNull
+   public final String getLastName() {
+      return this.lastName;
+   }
+}</code></pre></div></div></section>
+<section id="final_by_default"><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="java language-java">public final class Person {
+...</code></pre></div></div>
+<div class="quoteblock"><blockquote>Item 17: Design and document for inheritance or else prohibit it</blockquote><div class="attribution">&#8212; Effective Java</div></div></section>
+<section id="nulls"><div class="quoteblock"><blockquote>Kotlin&#8217;s type system is aimed at eliminating the danger of null references from code, also known as the
+<a href="http://en.wikipedia.org/wiki/Tony_Hoare#Apologies_and_retractions">The Billion Dollar Mistake</a>.</blockquote><div class="attribution">&#8212; Kotlin Docs</div></div>
+<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="java language-java">@NotNull
+private final String firstName;
+
+@NotNull
+public final String getFirstName()
+
+//...
+
+Intrinsics.checkParameterIsNotNull(firstName, "firstName");</code></pre></div></div></section>
+<section id="constructors"><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="java language-java">@NotNull
+private final String firstName;
+//...
+public Person(@NotNull String firstName, @NotNull String lastName) {
+    Intrinsics.checkParameterIsNotNull(firstName, "firstName");
+    Intrinsics.checkParameterIsNotNull(lastName, "lastName");
+    super();
+    this.firstName = firstName;
+    this.lastName = lastName;
+}</code></pre></div></div>
+<div class="quoteblock"><blockquote>Item 15: Minimize Mutability</blockquote><div class="attribution">&#8212; Effective Java</div></div></section>
+<section id="regular_properties"><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="java language-java">@NotNull
+private final String firstName;
+
+@NotNull
+public final String getFirstName() {
+    return this.firstName;
+}</code></pre></div></div>
+<div class="quoteblock"><blockquote>XXXXXXXItem 17: Design and document for inheritance or else prohibit it</blockquote><div class="attribution">&#8212; Effective Java</div></div></section>
+<section id="resources"><h2>Resources</h2><div class="ulist"><ul><li><p><a href="https://www.amazon.com/Effective-Java-Joshua-Bloch-ebook/dp/B00B8V09HY/">Josh Bloch&#8217;s Effective Java</a></p></li></ul></div></section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/lib/js/head.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/js/reveal.js"></script><script>// See https://github.com/hakimel/reveal.js#configuration for a full list of configuration options
 Reveal.initialize({
   // Display controls in the bottom right corner
   controls: true,
@@ -98,7 +167,7 @@ Reveal.initialize({
       { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/lib/js/classList.js', condition: function() { return !document.body.classList; } },
       { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
       { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-      
+      { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
       { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/plugin/zoom-js/zoom.js', async: true },
       { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/plugin/notes/notes.js', async: true }
   ]
