@@ -1,0 +1,28 @@
+= Kotlin Intro
+:imagesdir: images
+:revealjs_width: "1024"
+:revealjs_height: "768"
+:revealjs_minScale: 0.2
+:revealjs_maxScale: 2.0
+:customcss: ./preso.css
+:revealjs_theme: simple
+:revealjs_history: true
+// :revealjs_controls: false
+
+as of 1.2
+
+image::kotlin-logo-text.png[role=plain, height=200px]
+
+++++
+<br/><br/><div class="content" style="display: flex; text-align: center;">
+<p style="font-size: 0.5em; width: 100%"><a rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a>
+<br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Kotlin Intro</span> by
+<span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Jim J. Moore</span> is licensed under
+a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.<br />
+Presentation source at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/jdigger/kotlin-intro-preso" rel="dct:source">https://github.com/jdigger/kotlin-intro-preso</a></p></div>
+++++
+
+== Overview
+
+. Intro
