@@ -1,6 +1,8 @@
+[%notitle]
 = Kotlin Intro
 :imagesdir: images
-:revealjs_width: "1024"
+:source-highlighter: highlightjs
+:revealjs_width: "1200"
 :revealjs_height: "768"
 :revealjs_minScale: 0.2
 :revealjs_maxScale: 2.0
@@ -9,9 +11,9 @@
 :revealjs_history: true
 // :revealjs_controls: false
 
-as of 1.2
+image::kotlin-logo.png[role=plain, height=200px]
 
-image::kotlin-logo-text.png[role=plain, height=200px]
+as of 1.2
 
 ++++
 <br/><br/><div class="content" style="display: flex; text-align: center;">
@@ -23,6 +25,845 @@ a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative C
 Presentation source at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/jdigger/kotlin-intro-preso" rel="dct:source">https://github.com/jdigger/kotlin-intro-preso</a></p></div>
 ++++
 
-== Overview
+== Motivations
 
-. Intro
+* Statically typed (JVM and JS)
+* Safe, concise, great interop
+* Functional and OO paradigms
+* Focus on pragmatism
+
+
+[%notitle]
+== Swift?
+
+image::Swift_logo.png[background, size=contain]
+
+[NOTE.speaker]
+--
+Swift and Kotlin look and feel a LOT alike. Different use-cases, though. Kotlin for JVM/Android and Swift for iOS. Otherwise things are more in the air.
+--
+
+
+[%notitle]
+== So Many Nice Languages
+
+"We've built tools to support so many nice languages, and we’re still using Java"
+-- JetBrains in 2010
+
+
+== Major JVM Alternatives to the JLS
+
+
+== Dynamic and Pragmatic: Groovy
+
+* trivial on-ramp from Java
+  ** `.java` -> `.groovy`
+* build Java conventions (e.g., Beans) into language support
+  ** the focus was always "`how do we make programmer's lives easier?`" over "`purity`"
+* very sophisticated (almost Lisp-level) meta-programming capabilities
+* static compilation when you want it, dynamic otherwise
+* first major JVM language to have closures, seamless collections support, etc.
+
+
+== Groovy Problems
+
+* that focus on experimentation/pragmatism over purity led to some problems over time
+* dynamic groovy isn't fast enough for scripts (starting the JVM), too slow for many server tasks, and not safe enough for "`large`" systems
+   ** "`too slow`" changed over time, especially when the JVM added "`indy`" support and better GC
+* `@CompileStatic` let it be a better Java, but a handcuffed Groovy
+
+
+== Functional Hybrid: Scala
+
+* strongly encourages "`true`" Functional programming
+  ** allows ready "`escape valves`" for imperitive programming for Java interop, performance, or just because that's what's understood
+* deep and rich type system allow for much more "`provably correct`" systems
+* moves a tremendous amount of work away from the programmer and to the compiler
+* the FP focus and strong type systems make it a natural home for big data processing, complex concurrent systems, etc.
+
+
+== Scala Problems
+
+* the conceptual overhead can be tough for people without a Masters in Category Theory
+  ** if you don't grok currying the monads, it can be tough slogging
+* "`wrap all the things; then wrap them again`"
+  ** converting between types (especially for Java interop) involves a lot of wrapping and unwrapping
+//  ** the community often has to provide bridging APIs to mitigate this problem
+* between all the symbols and non-intuative rules (e.g. `::`) it can take a while to get used to
+* compilation can be *_slooow_* and binary incompatability
+
+
+[%notitle]
+== Java Puzzlers - Click and Hack
+
+image::click_and_hack_java_puzzlers.jpg[role="plain"]
+
+[NOTE.speaker]
+--
+Neal Gafter and Joshua Bloch at JavaOne 2003 doing Java Puzzlers. Held in the largest room San Fransisco's Moscone Center had --
+standing room only -- and if you were late you still couldn't get in.
+--
+
+
+[%notitle]
+== Effective Java
+
+image::EffectiveJava.jpg[background, size=contain]
+
+
+== Example Kotlin
+
+[source,kotlin]
+--
+class Person(val firstName: String, val lastName: String) {
+    val fullName get() = "$firstName $lastName"
+}
+--
+
+== Example to Java
+[source,java]
+--
+public final class Person {
+   @NotNull
+   private final String firstName;
+   @NotNull
+   private final String lastName;
+
+   public Person(@NotNull String firstName, @NotNull String lastName) {
+      Intrinsics.checkParameterIsNotNull(firstName, "firstName");
+      Intrinsics.checkParameterIsNotNull(lastName, "lastName");
+      super();
+      this.firstName = firstName;
+      this.lastName = lastName;
+   }
+
+   @NotNull
+   public final String getFullName() {
+      return this.firstName + ' ' + this.lastName;
+   }
+
+   @NotNull
+   public final String getFirstName() {
+      return this.firstName;
+   }
+
+   @NotNull
+   public final String getLastName() {
+      return this.lastName;
+   }
+}
+--
+
+[%notitle]
+== Final By Default
+
+[source,java]
+--
+public final class Person {
+...
+--
+
+[quote,"Effective Java"]
+Item 17: Design and document for inheritance or else prohibit it
+
+[.smaller]
+--
+In specific cases this can be a pain, such as with Spring. But there's a trivial fix.
+--
+
+
+[%notitle]
+== Nulls
+
+[quote,Kotlin Docs]
+Kotlin's type system is aimed at eliminating the danger of null references from code, also known as the
+http://en.wikipedia.org/wiki/Tony_Hoare#Apologies_and_retractions[The Billion Dollar Mistake].
+
+[source,java]
+--
+@NotNull
+private final String firstName;
+
+@NotNull
+public final String getFirstName()
+
+//...
+
+Intrinsics.checkParameterIsNotNull(firstName, "firstName");
+--
+
+
+[%notitle]
+== Constructors
+
+[source,java]
+--
+@NotNull
+private final String firstName;
+//...
+public Person(@NotNull String firstName, @NotNull String lastName) {
+    Intrinsics.checkParameterIsNotNull(firstName, "firstName");
+    Intrinsics.checkParameterIsNotNull(lastName, "lastName");
+    super();
+    this.firstName = firstName;
+    this.lastName = lastName;
+}
+--
+
+[quote,"Effective Java"]
+Item 15: Minimize Mutability
+
+
+== Collections Mutability
+[source,kotlin]
+--
+val list = listOf("a", "b")
+// list.add("c") <- compiller error
+println("list instance " + list.javaClass)
+// list instance class java.util.Arrays$ArrayList
+
+// (list as java.util.List<String>).add("c") <- throws java.lang.UnsupportedOperationException
+
+val mlist = mutableListOf("a", "b")
+mlist.add("c")
+println("mlist instance " + mlist.javaClass)
+// mlist instance class java.util.ArrayList
+--
+
+[%notitle]
+== Regular Properties
+
+[source,java]
+--
+@NotNull
+private final String firstName;
+
+@NotNull
+public final String getFirstName() {
+    return this.firstName;
+}
+--
+
+[quote,"Effective Java"]
+Item 14: In public classes, use accessor methods, not public fields
+
+
+== Computed Properties, Implicit Types, and String Interpolation
+
+[source,kotlin]
+--
+val fullName get() = "$firstName $lastName"
+--
+
+[source,java]
+--
+@NotNull
+public final String getFullName() {
+    return this.firstName + ' ' + this.lastName;
+}
+--
+
+
+== Sensible Class Defaults
+
+[%notitle]
+== The Sensible Class Defaults
+
+[source,kotlin]
+--
+class Person(val firstName: String, val lastName: String) {
+    val fullName get() = "$firstName $lastName"
+}
+--
+
+[twocol]
+* Kotlin auto-hides (makes private) a class's internals (e.g., fields)
+* The default visibility is `public`
+* The default way of accessing a class's data is through its properties (getters and setters)
+* The default for classes, fields, methods, local variables, etc. is to be `final`
+* The default constructor makes sure the class is fully initialized
+* Exceptions are "`runtime`"
+
+
+== But What About `equals()` `hashCode()` etc?
+
+Aren't there "`sensible defaults`" for those too?
+
+
+[%notitle]
+== Kotlin Data Class
+
+[source,kotlin]
+--
+data class Person(val firstName: String, val lastName: String) {
+    val fullName get() = "$firstName $lastName"
+}
+--
+
+[%notitle]
+== Java Data Class
+
+[source,java]
+--
+// ... everything before, and in addition ...
+public String toString() {
+    return "Person(firstName=" + this.firstName + ", lastName=" + this.lastName + ")";
+}
+
+public int hashCode() {
+    return (this.firstName != null ? this.firstName.hashCode() : 0) * 31 + (this.lastName != null ? this.lastName.hashCode() : 0);
+}
+
+public boolean equals(Object var1) {
+    if (this != var1) {
+        if (var1 instanceof Person) {
+            Person var2 = (Person)var1;
+            if (Intrinsics.areEqual(this.firstName, var2.firstName) && Intrinsics.areEqual(this.lastName, var2.lastName)) {
+                return true;
+            }
+        }
+
+        return false;
+    } else {
+        return true;
+    }
+}
+
+@NotNull
+public final Person copy(@NotNull String firstName, @NotNull String lastName) {
+    Intrinsics.checkParameterIsNotNull(firstName, "firstName");
+    Intrinsics.checkParameterIsNotNull(lastName, "lastName");
+    return new Person(firstName, lastName);
+}
+
+@NotNull
+public final String component1() {
+    return this.firstName;
+}
+
+@NotNull
+public final String component2() {
+    return this.lastName;
+}
+
+// $FF: synthetic method
+// $FF: bridge method
+@NotNull
+public static Person copy$default(Person var0, String var1, String var2, int var3, Object var4) {
+    if ((var3 & 1) != 0) {
+        var1 = var0.firstName;
+    }
+
+    if ((var3 & 2) != 0) {
+        var2 = var0.lastName;
+    }
+
+    return var0.copy(var1, var2);
+}
+--
+
+
+[%notitle]
+== Lombok
+
+All that's cool, but I can get most of that with https://projectlombok.org/features/all[Project Lombok]...
+
+
+== Kotlin form of that copy method
+
+Kotlin has named parameters and parameter defaults. The Kotlin form of that copy method is actually
+
+[source,kotlin]
+--
+fun copy(firstName: String = this.firstName,
+         lastName: String = this.lastName) =
+    Person(firstName, lastName)
+--
+
+which means I can write
+
+[source,kotlin]
+--
+val jimMoore = Person("Jim", "Moore")
+val kellyMoore = jimMoore.copy(firstName = "Kelly")
+val jim2 = jimMoore.copy() // silly "defensive copy", since immutable
+--
+
+[%notitle]
+== Destructuring
+
+The `componentN` methods allow for "destructuring"
+
+[source,kotlin]
+--
+val jimMoore = Person("Jim", "Moore")
+val (fn, ln) = jimMoore
+val kellyMoore = jimMoore.copy(firstName = "Kelly")
+val people = listOf(jimMoore, kellyMoore)
+val firstNames = people.map { person -> person.firstName }
+val lnFn = people.map { (firstName, lastName) -> "$lastName, $firstName" }
+val lastNames = people.map { (_, lastName) -> lastName }
+--
+
+
+== Kotlin Declaration
+
+[source,kotlin]
+--
+fun copy(firstName: String = this.firstName,
+         lastName: String = this.lastName) =
+    Person(firstName, lastName)
+--
+
+* It looks like an expression because it is: there's a *_heavy_* preference for expressions over statements
+* The return type can be specified, but it's infered from the RHS (Right Hand Side) since https://en.wikipedia.org/wiki/Sides_of_an_equation[equality is symetric]
+
+
+== Can You Spot the Java Bug?
+
+[source,java]
+--
+public static void printIncOne(Integer i) {
+    System.out.println(i + 1);
+}
+--
+
+== Invoke the Method
+
+[source,java]
+--
+public static void printIncOne(Integer i) {
+    System.out.println(i + 1); // throws NullPointerException
+}
+
+public static void main(String[] args) {
+    printIncOne(null);
+}
+--
+
+
+== Nulls
+
+
+== Null is a first-class part of the type system
+
+* Similar to `null` in SQL, it's not "`just another value`" but truly "`the absense of a value`"
+* If a value may have a null, its type-specification *_MUST_* declare that; otherwise it's not allowed
+* https://kotlinlang.org/docs/reference/null-safety.html[The Kotlin docs has a simple write-up on Null Safety] and how to work with it
+
+
+== Null Idiom Example
+
+[source,kotlin]
+--
+val files = File("Test").listFiles() // Array<out File>?
+println(files?.size ?: "empty")
+--
+
+as Java
+
+[source,java]
+--
+File[] files = (new File("Test")).listFiles();
+Object var2 = files != null ? files.length : "empty";
+System.out.println(var2);
+--
+
+
+== Kotlin Version of `incrOne`
+
+[source,kotlin]
+--
+fun incrOne(i: Int) {
+    println(i + 1)
+}
+
+fun incrOneNullable(i: Int?) {
+    println(i + 1) // <- compiler error
+    if (i != null) {
+        println(i + 1)
+    }
+}
+--
+
+== Kotlin `incrOne` -> Java
+
+[source,java]
+--
+public static final void incrOne(int i) {
+    int var1 = i + 1;
+    System.out.println(var1);
+}
+
+public static final void incrOneNullable(@Nullable Integer i) {
+    if (i != null) {
+        int var1 = i + 1;
+        System.out.println(var1);
+    }
+}
+--
+
+== Let the Compiler Do the Work
+
+Kotlin has no "`primative`" types, but gives you the benefits of them while also providing the richness of objects
+
+image::one_option.jpg[role=plain]
+
+
+
+== Singletons and Companion Objects
+
+[source,kotlin]
+--
+class AClass {
+    companion object {
+        fun foo() {}
+        fun runner(r: Runnable) { r.run() }
+    }
+}
+
+fun aFun() {
+    AClass.foo()
+    AClass().foo() // error
+    AClass.runner(object : Runnable, Closeable {
+        override fun run() {}
+        override fun close() {}
+    })
+}
+--
+
+
+== Objects are Cool and All, But...
+
+
+[%notitle]
+== Execution In the Kingdom of Nouns
+
+https://steve-yegge.blogspot.com/2006/03/execution-in-kingdom-of-nouns.html[Execution In the Kingdom of Nouns]
+
+"... In the Kingdom of Javaland, where King Java rules with a silicon fist, people aren't allowed to think the way
+you and I do.
+
+In Javaland, you see, nouns are very important, by order of the King himself. Nouns are the most
+important citizens in the Kingdom.
+
+They parade around looking distinguished in their showy finery, which is provided
+by the Adjectives, who are quite relieved at their lot in life. The Adjectives are nowhere near as high-class as
+the Nouns, but they consider themselves quite lucky that they weren't born Verbs..."
+
+
+== Functions (Verbs) are "`Free`"
+
+[source,kotlin]
+--
+fun noClassFunction() = "Look, Ma!"
+
+class AClass {
+    fun doSomething() {
+        fun anotherFun() {
+            println(noClassFunction())
+        }
+        anotherFun()
+    }
+}
+--
+
+[.smaller]
+Not everyone is quite ready for such liberty, and King Java can still interact with such free-born verbs.
+While in his land they are bound to artificial containers, such as a "`package class.`"
+
+
+== Extending Classes
+
+Often the class definitions we're given are insufficient, leading to creating zillions of "`Utils`" classes
+
+[%notitle]
+== Extending Classes - Static
+
+Static languages like Scala allow for "`implicit types`" to allow for easy conversions between
+types (typically by wrapping)
+
+
+[%notitle]
+== Extending Classes - Dynamic
+
+Dynamic languages give you a lot of freedom to change what classes can do.
+
+* Ruby has "`monkey patching`"
+* Javascript has `prototype`
+
+
+== What if we could have it "`all`"?
+
+* Static AND context-sensitive typing?
+* Simple AND clear?
+* oh, and make it efficient (CPU/Mem)
+
+
+== Extension Methods
+
+[source,kotlin]
+--
+fun String.beAwesome() = this + " is AWESOME!"
+val String.awesomeness get() = this + " is AWESOME!"
+val String?.`is here?` get() = (this ?: "Nothing") + " is here"
+
+fun m() {
+    "Jim".beAwesome()
+    "Jim".awesomeness
+    null.`is here?`
+}
+--
+
+[.smaller]
+Sadly, while https://docs.oracle.com/javase/specs/jvms/se8/html/index.html[the JVM] has method names
+as "just a string", https://docs.oracle.com/javase/specs/jls/se8/html/index.html[the JLS] doesn't allow for it.
+So anything written against the JLS can't invoke it directly.
+
+
+== Extension Methods - Java
+
+[source,java]
+--
+@NotNull public static final String beAwesome(@NotNull String $receiver) {
+    Intrinsics.checkParameterIsNotNull($receiver, "$receiver");
+    return $receiver + " is AWESOME!";
+}
+
+@NotNull public static final String getAwesomeness(@NotNull String $receiver) {
+    Intrinsics.checkParameterIsNotNull($receiver, "$receiver");
+    return $receiver + " is AWESOME!";
+}
+
+@NotNull public static final String is_here_/* $FF was: is here?*/(@Nullable String $receiver) {
+    StringBuilder var10000 = new StringBuilder();
+    String var10001 = $receiver;
+    if ($receiver == null) var10001 = "Nothing";
+    return var10000.append(var10001).append(" is here").toString();
+}
+
+public static final void m() {
+    beAwesome("Jim");
+    getAwesomeness("Jim");
+    // ACONST_NULL
+    // INVOKESTATIC ScratchKt.is here? (Ljava/lang/String;)Ljava/lang/String;
+}
+--
+// \*
+
+
+== Notes On Extension Methods
+
+* You can define them at any scope you define functions
+* They are defined AND resolved statically (i.e., no polymorphism)
+
+In other words, you can define them to be just in scope for a class or a package. Or in multiple places, as long as they are imported.
+
+
+== More of Making the Right Thing Easy
+
+[%notitle]
+== Mutable Java Sample
+
+[source,java]
+--
+public class MClass {
+    private String a;
+    private String b;
+    public void setA(String a) { this.a = a; }
+    public void setB(String b) { this.b = b; }
+}
+
+public class AClass {
+    public MClass mclass;
+    public init() {
+        this.mclass = new MClass();
+        this.mclass.setA("foo");
+        this.mclass.setB("bar");
+    }
+}
+--
+
+[.smaller]
+--
+* Bad(ish) concurrency: If another thread has the AClass, it can read/write the incomplete instance
+* Bad(ish) performance: Accessing the heap is slow compared to the stack
+--
+
+
+[%notitle]
+== Better Mutable Java Sample
+
+Better:
+
+[source,java]
+--
+public class AClass {
+    public MClass mclass;
+    public init() {
+        MClass mclass = new MClass();
+        mclass.setA("foo");
+        mclass.setB("bar");
+        this.mclass = mclass;
+    }
+}
+--
+
+== .apply {}
+
+From the stdlib
+
+[source,kotlin]
+--
+public inline fun <T> T.apply(block: T.() -> Unit): T {
+    block()
+    return this
+}
+--
+
+Example:
+
+[source,kotlin]
+--
+class KClass {
+    var mclass: MClass
+    fun init() {
+        mclass = MClass().apply {
+            a = "foo"
+            b = "bar"
+        }
+    }
+}
+--
+
+
+
+== .run {}
+
+[source,kotlin]
+--
+public inline fun <T, R> T.run(block: T.() -> R): R {
+    return block()
+}
+--
+
+Example:
+
+[source,kotlin]
+--
+println("something".run {
+    capitalize() + " is afoot"
+}) // prints "Something is afoot"
+--
+
+
+[%notitle]
+== Composition Over Inheritance
+
+[quote,"Effective Java"]
+Item 16 : Favor composition Over Inheritance
+
+
+== Delegation
+
+[source,kotlin]
+--
+interface Base {
+    fun print()
+}
+
+class BaseImpl(val x: Int) : Base {
+    override fun print() { print(x) }
+}
+
+class Derived(baseDelegator: Base) : Base by baseDelegator
+
+fun main(args: Array<String>) {
+    val delegate = BaseImpl(10)
+    Derived(delegate).print()
+}
+--
+
+== Delegation - Java
+
+[source,java]
+--
+public final class Derived implements Base {
+   private final Base $$delegate_0;
+
+   public Derived(@NotNull Base baseDelegator) {
+      Intrinsics.checkParameterIsNotNull(baseDelegator, "baseDelegator");
+      super();
+      this.$$delegate_0 = baseDelegator;
+   }
+
+   public void print() {
+      this.$$delegate_0.print();
+   }
+}
+--
+// \$$
+
+== Delegation - Properties
+
+You can do the same thing for properties, so you can create common libraries for property access patterns
+
+[%notitle]
+== Delegation - Properties2
+
+Examples https://kotlinlang.org/docs/reference/delegated-properties.html[provided by the standard library include]:
+
+* lazy: the value gets computed only upon first access
+* observable: listeners get notified about changes to this property
+* storing properties in a map, instead of a separate field for each property
+
+== Delegated Properties Example
+
+[source,kotlin]
+--
+val lazyValue: String by lazy {
+    println("computed!")
+    "Hello"
+}
+
+fun main(args: Array<String>) {
+    println(lazyValue)
+    // computed!
+    // Hello
+    println(lazyValue)
+    // Hello
+}
+--
+
+== Autocasting, Reflection, and `when` structure
+
+[source,kotlin]
+--
+fun hasPrefixOrOdd(x: Any) = when(x) {
+    is String -> x.startsWith("prefix")
+    is Int -> x % 2  == 1
+    else -> false
+}
+--
+
+
+== Just the Start
+
+[twocol]
+* Coroutines
+* Reified Generics
+* Clear Co/Contra-variance
+* Sealed Classes
+* Rich collections (and creation)
+* Easy ranges
+* Operator overloading and infix methods
+* Type aliases
+* Most statements are expressions (`if`, `try`, etc.)
+* Tail recursion
+* etc...
+
+
+== Resources
+
+* Kotlin main docs: https://kotlinlang.org/docs/reference/
+* Josh Bloch's Effective Java: https://www.amazon.com/Effective-Java-Joshua-Bloch-ebook/dp/B00B8V09HY/
