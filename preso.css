@@ -3,25 +3,33 @@
   box-shadow: none;
 }
 
-.reveal pre code {
-  display: block;
-  padding: 5px;
-  overflow: auto;
-  max-height: 30em;
-  word-wrap: normal;
+.reveal .slides section {
+  padding: 0;
 }
 
-/* #gradle-wrapper-search-script code {
-    font-size: 75%;
-    line-height: normal;
-} */
+.reveal pre {
+  width: 100%;
+  box-shadow: inherit;
+}
+
+.reveal pre code {
+  /* display: block; */
+  /* padding: 5px; */
+  /* overflow: auto; */
+  max-height: 30em;
+  /* word-wrap: normal; */
+}
+
+.reveal blockquote {
+  width: 90%;
+}
 
 div.smaller {
   font-size: 50%;
   line-height: normal;
 }
 
-/* #modularizing-your-logic-list ul {
+#just_the_start ul, #sensible_defaults ul {
     columns: 2;
     -webkit-columns: 2;
     -moz-columns: 2;
@@ -29,30 +37,6 @@ div.smaller {
     -webkit-column-gap: 2em;
     -moz-column-gap: 2em;
     list-style-position: outside;
-} */
-
-div.listingblock div.title {
-  text-align: left;
-  font-size: 0.7em;
-  font-family: monospace;
-}
-
-div.listingblock div.title + div.content pre {
-  margin-top: 0;
-}
-
-#q-a h2 {
-  font-size: 10em;
-  top: -100px;
-  position: absolute;
-  color: #ffff00;
-  text-shadow: 12px 11px 10px rgba(0, 0, 0, 0.99);
-}
-
-#incremental-testing code {
-  font-size: 0.8em;
-  max-height: 700px;
-  line-height: normal;
 }
 
 .license {

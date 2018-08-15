@@ -11,12 +11,13 @@ document.getElementsByTagName( 'head' )[0].appendChild( link );</script><!--[if 
 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Jim J. Moore</span> is licensed under
 a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.<br />
 Presentation source at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/jdigger/kotlin-intro-preso" rel="dct:source">https://github.com/jdigger/kotlin-intro-preso</a></p></div></div></section>
-<section id="overview"><h2>Overview</h2><div class="olist arabic"><ol class="arabic"><li><p>Intro</p></li></ol></div></section>
+<section id="java_puzzlers_click_and_hack"><div class="imageblock plain" style=""><img src="images/click_and_hack_java_puzzlers.jpg" alt="click and hack java puzzlers"></div>
+<aside class="notes"><div class="paragraph"><p>Neal Gafter and Joshua Bloch at JavaOne 2003 doing Java Puzzlers. Held in the largest room San Fransisco&#8217;s Moscone Center had&#8201;&#8212;&#8201;standing room only&#8201;&#8212;&#8201;and if you were late you still couldn&#8217;t get in.</p></div></aside></section>
 <section id="motivations"><h2>Motivations</h2><div class="ulist"><ul><li><p>Statically typed (JVM and JS)</p></li><li><p>Safe, concise, great interop</p></li><li><p>Functional and OO paradigms</p></li><li><p>Focus on pragmatism</p></li></ul></div></section>
-<section id="so_many_nice_languages"><div class="quoteblock"><blockquote>We&#8217;ve built tools to support so many nice languages, and we’re still using Java</blockquote><div class="attribution">&#8212; JetBrains, 2010</div></div></section>
+<section id="so_many_nice_languages"><div class="quoteblock"><blockquote>We&#8217;ve built tools to support so many nice languages, and we’re still using Java</blockquote><div class="attribution">&#8212; JetBrains in 2010</div></div></section>
 <section id="effective_java" data-background-image="images/EffectiveJava.jpg" data-background-size="contain"></section>
 <section id="example_kotlin"><h2>Example Kotlin</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">class Person(val firstName: String, val lastName: String) {
-    val fullName: String get() = "$firstName $lastName"
+    val fullName get() = "$firstName $lastName"
 }</code></pre></div></div></section>
 <section id="example_to_java"><h2>Example to Java</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="java language-java">public final class Person {
    @NotNull
@@ -49,7 +50,8 @@ Presentation source at <a xmlns:dct="http://purl.org/dc/terms/" href="https://gi
 }</code></pre></div></div></section>
 <section id="final_by_default"><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="java language-java">public final class Person {
 ...</code></pre></div></div>
-<div class="quoteblock"><blockquote>Item 17: Design and document for inheritance or else prohibit it</blockquote><div class="attribution">&#8212; Effective Java</div></div></section>
+<div class="quoteblock"><blockquote>Item 17: Design and document for inheritance or else prohibit it</blockquote><div class="attribution">&#8212; Effective Java</div></div>
+<div class="openblock smaller"><div class="content"><div class="paragraph"><p>In specific cases this can be a pain, such as with Spring. But there&#8217;s a trivial fix.</p></div></div></div></section>
 <section id="nulls"><div class="quoteblock"><blockquote>Kotlin&#8217;s type system is aimed at eliminating the danger of null references from code, also known as the
 <a href="http://en.wikipedia.org/wiki/Tony_Hoare#Apologies_and_retractions">The Billion Dollar Mistake</a>.</blockquote><div class="attribution">&#8212; Kotlin Docs</div></div>
 <div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="java language-java">@NotNull
@@ -79,8 +81,278 @@ private final String firstName;
 public final String getFirstName() {
     return this.firstName;
 }</code></pre></div></div>
-<div class="quoteblock"><blockquote>XXXXXXXItem 17: Design and document for inheritance or else prohibit it</blockquote><div class="attribution">&#8212; Effective Java</div></div></section>
-<section id="resources"><h2>Resources</h2><div class="ulist"><ul><li><p><a href="https://www.amazon.com/Effective-Java-Joshua-Bloch-ebook/dp/B00B8V09HY/">Josh Bloch&#8217;s Effective Java</a></p></li></ul></div></section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/lib/js/head.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/js/reveal.js"></script><script>// See https://github.com/hakimel/reveal.js#configuration for a full list of configuration options
+<div class="quoteblock"><blockquote>Item 14: In public classes, use accessor methods, not public fields</blockquote><div class="attribution">&#8212; Effective Java</div></div></section>
+<section id="computed_properties_implicit_types_and_string_interpolation"><h2>Computed Properties, Implicit Types, and String Interpolation</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">val fullName get() = "$firstName $lastName"</code></pre></div></div>
+<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="java language-java">@NotNull
+public final String getFullName() {
+    return this.firstName + ' ' + this.lastName;
+}</code></pre></div></div></section>
+<section id="sensible_defaults"><h2>Sensible Defaults</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">class Person(val firstName: String, val lastName: String) {
+    val fullName get() = "$firstName $lastName"
+}</code></pre></div></div>
+<div class="ulist"><ul><li><p>Kotlin auto-hides (makes private) a class&#8217;s internals (e.g., fields)</p></li><li><p>The default visibility is <code>public</code></p></li><li><p>The default way of accessing a class&#8217;s data is through its properties (getters and setters)</p></li><li><p>The default for classes, fields, methods, local variables, etc. is to be <code>final</code></p></li><li><p>The default constructor makes sure the class is fully initialized</p></li><li><p>Exceptions are &#8220;runtime&#8221;</p></li></ul></div></section>
+<section id="but_what_about_equals_hashcode_etc"><h2>But What About equals() hashCode() etc?</h2><div class="paragraph"><p>Aren&#8217;t there &#8220;sensible defaults&#8221; for those too?</p></div></section>
+<section id="kotlin_data_class"><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">data class Person(val firstName: String, val lastName: String) {
+    val fullName get() = "$firstName $lastName"
+}</code></pre></div></div></section>
+<section id="java_data_class"><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="java language-java">// ... everything before, and in addition ...
+public String toString() {
+    return "Person(firstName=" + this.firstName + ", lastName=" + this.lastName + ")";
+}
+
+public int hashCode() {
+    return (this.firstName != null ? this.firstName.hashCode() : 0) * 31 + (this.lastName != null ? this.lastName.hashCode() : 0);
+}
+
+public boolean equals(Object var1) {
+    if (this != var1) {
+        if (var1 instanceof Person) {
+            Person var2 = (Person)var1;
+            if (Intrinsics.areEqual(this.firstName, var2.firstName) &amp;&amp; Intrinsics.areEqual(this.lastName, var2.lastName)) {
+                return true;
+            }
+        }
+
+        return false;
+    } else {
+        return true;
+    }
+}
+
+@NotNull
+public final Person copy(@NotNull String firstName, @NotNull String lastName) {
+    Intrinsics.checkParameterIsNotNull(firstName, "firstName");
+    Intrinsics.checkParameterIsNotNull(lastName, "lastName");
+    return new Person(firstName, lastName);
+}
+
+@NotNull
+public final String component1() {
+    return this.firstName;
+}
+
+@NotNull
+public final String component2() {
+    return this.lastName;
+}
+
+// $FF: synthetic method
+// $FF: bridge method
+@NotNull
+public static Person copy$default(Person var0, String var1, String var2, int var3, Object var4) {
+    if ((var3 &amp; 1) != 0) {
+        var1 = var0.firstName;
+    }
+
+    if ((var3 &amp; 2) != 0) {
+        var2 = var0.lastName;
+    }
+
+    return var0.copy(var1, var2);
+}</code></pre></div></div></section>
+<section id="lombok"><div class="paragraph"><p>All that&#8217;s cool, but I can get most of that with <a href="https://projectlombok.org/features/all">Project Lombok</a>&#8230;&#8203;</p></div></section>
+<section id="kotlin_form_of_that_copy_method"><h2>Kotlin form of that copy method</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">fun copy(firstName: String = this.firstName,
+         lastName: String = this.lastName) =
+    Person(firstName, lastName)</code></pre></div></div>
+<div class="paragraph"><p>which means I can write</p></div>
+<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">val jimMoore = Person("Jim", "Moore")
+val kellyMoore = jimMoore.copy(firstName = "Kelly")</code></pre></div></div></section>
+<section id="destructuring"><div class="paragraph"><p>The <code>componentN</code> methods allow for "destructuring"</p></div>
+<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">val jimMoore = Person("Jim", "Moore")
+val (fn, ln) = jimMoore
+val kellyMoore = jimMoore.copy(firstName = "Kelly")
+val people = listOf(jimMoore, kellyMoore)
+val firstNames = people.map { person -&gt; person.firstName }
+val lnFn = people.map { (firstName, lastName) -&gt; "$lastName, $firstName" }
+val lastNames = people.map { (_, lastName) -&gt; lastName }</code></pre></div></div></section>
+<section id="kotlin_declaration"><h2>Kotlin Declaration</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">fun copy(firstName: String = this.firstName,
+         lastName: String = this.lastName) =
+    Person(firstName, lastName)</code></pre></div></div>
+<div class="ulist"><ul><li><p>It looks like an expression because it is: there&#8217;s a <strong><em>heavy</em></strong> preference for expressions over statements</p></li><li><p>The return type can be specified, but it&#8217;s infered from the RHS (Right Hand Side) since <a href="https://en.wikipedia.org/wiki/Sides_of_an_equation">equality is symetric</a></p></li></ul></div></section>
+<section id="nulls_2"><h2>Nulls</h2></section>
+<section id="null_is_a_first_class_part_of_the_type_system"><h2>Null is a first-class part of the type system</h2><div class="ulist"><ul><li><p>Similar to <code>null</code> in SQL, it&#8217;s not &#8220;just another value&#8221; but truly &#8220;the absense of a value&#8221;</p></li><li><p>If a value may have a null, its type-specification <strong><em>MUST</em></strong> declare that; otherwise it&#8217;s not allowed</p></li><li><p><a href="https://kotlinlang.org/docs/reference/null-safety.html">The Kotlin docs has a simple write-up on Null Safety</a> and how to work with it</p></li></ul></div></section>
+<section id="null_idiom_example"><h2>Null Idiom Example</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">val files = File("Test").listFiles() // Array&lt;out File&gt;?
+println(files?.size ?: "empty")</code></pre></div></div>
+<div class="paragraph"><p>as Java</p></div>
+<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="java language-java">File[] files = (new File("Test")).listFiles();
+Object var2 = files != null ? files.length : "empty";
+System.out.println(var2);</code></pre></div></div></section>
+<section id="execution_in_the_kingdom_of_nouns"><div class="paragraph"><p><a href="https://steve-yegge.blogspot.com/2006/03/execution-in-kingdom-of-nouns.html">Execution In the Kingdom of Nouns</a></p></div>
+<div class="paragraph"><p>"`&#8230;&#8203; In the Kingdom of Javaland, where King Java rules with a silicon fist, people aren&#8217;t allowed to think the way
+you and I do.</p></div>
+<div class="paragraph"><p>In Javaland, you see, nouns are very important, by order of the King himself. Nouns are the most
+important citizens in the Kingdom.</p></div>
+<div class="paragraph"><p>They parade around looking distinguished in their showy finery, which is provided
+by the Adjectives, who are quite relieved at their lot in life. The Adjectives are nowhere near as high-class as
+the Nouns, but they consider themselves quite lucky that they weren&#8217;t born Verbs&#8230;&#8203;`"</p></div></section>
+<section id="functions_are_free"><h2>Functions are &#8220;Free&#8221;</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">fun noClassFunction() = "Look, Ma!"
+
+class AClass {
+    fun doSomething() {
+        fun anotherFun() {
+            println(noClassFunction())
+        }
+        anotherFun()
+    }
+}</code></pre></div></div>
+<div class="paragraph smaller"><p>Not everyone is quite ready for such liberty, and King Java can still interact with such free-born verbs.
+While in his land they are bound to artificial containers, such as a &#8220;package class.&#8221;</p></div></section>
+<section id="singletons_and_companion_objects"><h2>Singletons and Companion Objects</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">class AClass {
+    companion object {
+        fun foo() {}
+        fun runner(r: Runnable) { r.run() }
+    }
+}
+
+fun aFun() {
+    AClass.foo()
+    AClass().foo() // error
+    AClass.runner(object : Runnable, Closeable {
+        override fun run() {}
+        override fun close() {}
+    })
+}</code></pre></div></div></section>
+<section id="extending_classes"><h2>Extending Classes</h2><div class="paragraph"><p>Often the class definitions we&#8217;re given are insufficient, leading to creating zillions of &#8220;Utils&#8221; classes</p></div></section>
+<section id="extending_classes_static"><div class="paragraph"><p>Static languages like Scala allow for &#8220;implicit types&#8221; to allow for easy conversions between
+types (typically by wrapping)</p></div></section>
+<section id="extending_classes_dynamic"><div class="paragraph"><p>Dynamic languages give you a lot of freedom to change what classes can do.</p></div>
+<div class="ulist"><ul><li><p>Ruby has &#8220;monkey patching&#8221;</p></li><li><p>Javascript has <code>prototype</code></p></li></ul></div></section>
+<section id="what_if_we_could_have_it_all"><h2>What if we could have it &#8220;all&#8221;?</h2><div class="ulist"><ul><li><p>Static AND context-sensitive typing?</p></li><li><p>Simple AND clear?</p></li><li><p>oh, and make it efficient (CPU/Mem)</p></li></ul></div></section>
+<section id="extension_methods"><h2>Extension Methods</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">fun String.beAwesome() = this + " is AWESOME!"
+val String.awesomeness get() = this + " is AWESOME!"
+val String?.`is here?` get() = (this ?: "Nothing") + " is here"
+
+fun m() {
+    "Jim".beAwesome()
+    "Jim".awesomeness
+    null.`is here?`
+}</code></pre></div></div>
+<div class="paragraph smaller"><p>Sadly, while <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/index.html">the JVM</a> has method names
+as "just a string", <a href="https://docs.oracle.com/javase/specs/jls/se8/html/index.html">the JLS</a> doesn&#8217;t allow for it.
+So anything written against the JLS can&#8217;t invoke it directly.</p></div></section>
+<section id="extension_methods_java"><h2>Extension Methods - Java</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="java language-java">@NotNull public static final String beAwesome(@NotNull String $receiver) {
+    Intrinsics.checkParameterIsNotNull($receiver, "$receiver");
+    return $receiver + " is AWESOME!";
+}
+
+@NotNull public static final String getAwesomeness(@NotNull String $receiver) {
+    Intrinsics.checkParameterIsNotNull($receiver, "$receiver");
+    return $receiver + " is AWESOME!";
+}
+
+@NotNull public static final String is_here_/* $FF was: is here?*/(@Nullable String $receiver) {
+    StringBuilder var10000 = new StringBuilder();
+    String var10001 = $receiver;
+    if ($receiver == null) var10001 = "Nothing";
+    return var10000.append(var10001).append(" is here").toString();
+}
+
+public static final void m() {
+    beAwesome("Jim");
+    getAwesomeness("Jim");
+    // ACONST_NULL
+    // INVOKESTATIC ScratchKt.is here? (Ljava/lang/String;)Ljava/lang/String;
+}</code></pre></div></div></section>
+<section id="notes_on_extension_methods"><h2>Notes On Extension Methods</h2><div class="ulist"><ul><li><p>You can define them at any scope you define functions</p></li><li><p>They are defined AND resolved statically (i.e., no polymorphism)</p></li></ul></div>
+<div class="paragraph"><p>In other words, you can define them to be just in scope for a class or a package. Or in multiple places, as long as they are imported.</p></div></section>
+<section id="more_of_making_the_right_thing_easy"><h2>More of Making the Right Thing Easy</h2></section>
+<section id="mutable_java_sample"><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="java language-java">public class MClass {
+    private String a;
+    private String b;
+    public void setA(String a) { this.a = a; }
+    public void setB(String b) { this.b = b; }
+}
+
+public class AClass {
+    public MClass mclass;
+    public init() {
+        this.mclass = new MClass();
+        this.mclass.setA("foo");
+        this.mclass.setB("bar");
+    }
+}</code></pre></div></div>
+<div class="openblock smaller"><div class="content"><div class="ulist"><ul><li><p>Bad(ish) concurrency: If another thread has the AClass, it can read/write the incomplete instance</p></li><li><p>Bad(ish) performance: Accessing the heap is slow compared to the stack</p></li></ul></div></div></div></section>
+<section id="better_mutable_java_sample"><div class="paragraph"><p>Better:</p></div>
+<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="java language-java">public class AClass {
+    public MClass mclass;
+    public init() {
+        MClass mclass = new MClass();
+        mclass.setA("foo");
+        mclass.setB("bar");
+        this.mclass = mclass;
+    }
+}</code></pre></div></div></section>
+<section id="apply"><h2>.apply {}</h2><div class="paragraph"><p>From the stdlib</p></div>
+<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">public inline fun &lt;T&gt; T.apply(block: T.() -&gt; Unit): T {
+    block()
+    return this
+}</code></pre></div></div>
+<div class="paragraph"><p>Example:</p></div>
+<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">class KClass {
+    var mclass: MClass
+    fun init() {
+        mclass = MClass().apply {
+            a = "foo"
+            b = "bar"
+        }
+    }
+}</code></pre></div></div></section>
+<section id="run"><h2>.run {}</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">public inline fun &lt;T, R&gt; T.run(block: T.() -&gt; R): R {
+    return block()
+}</code></pre></div></div>
+<div class="paragraph"><p>Example:</p></div>
+<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">println("something".run {
+    capitalize() + " is afoot"
+}) // prints "Something is afoot"</code></pre></div></div></section>
+<section id="delegation"><h2>Delegation</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">interface Base {
+    fun print()
+}
+
+class BaseImpl(val x: Int) : Base {
+    override fun print() { print(x) }
+}
+
+class Derived(baseDelegator: Base) : Base by baseDelegator
+
+fun main(args: Array&lt;String&gt;) {
+    val delegate = BaseImpl(10)
+    Derived(delegate).print()
+}</code></pre></div></div></section>
+<section id="delegation_java"><h2>Delegation - Java</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="java language-java">public final class Derived implements Base {
+   private final Base $$delegate_0;
+
+   public Derived(@NotNull Base baseDelegator) {
+      Intrinsics.checkParameterIsNotNull(baseDelegator, "baseDelegator");
+      super();
+      this.$$delegate_0 = baseDelegator;
+   }
+
+   public void print() {
+      this.$$delegate_0.print();
+   }
+}</code></pre></div></div></section>
+<section id="delegation_properties"><h2>Delegation - Properties</h2><div class="paragraph"><p>You can do the same thing for properties, so you can create common libraries for property access patterns</p></div></section>
+<section id="delegation_properties2"><div class="paragraph"><p>Examples <a href="https://kotlinlang.org/docs/reference/delegated-properties.html">provided by the standard library include</a>:</p></div>
+<div class="ulist"><ul><li><p>lazy: the value gets computed only upon first access</p></li><li><p>observable: listeners get notified about changes to this property</p></li><li><p>storing properties in a map, instead of a separate field for each property</p></li></ul></div></section>
+<section id="delegated_properties_example"><h2>Delegated Properties Example</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">val lazyValue: String by lazy {
+    println("computed!")
+    "Hello"
+}
+
+fun main(args: Array&lt;String&gt;) {
+    println(lazyValue)
+    // computed!
+    // Hello
+    println(lazyValue)
+    // Hello
+}</code></pre></div></div></section>
+<section id="autocasting_reflection_and_code_when_code_structure"><h2>Autocasting, Reflection, and <code>when</code> structure</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">fun hasPrefixOrOdd(x: Any) = when(x) {
+    is String -&gt; x.startsWith("prefix")
+    is Int -&gt; x % 2  == 1
+    else -&gt; false
+}</code></pre></div></div></section>
+<section id="just_the_start"><h2>Just the Start</h2><div class="ulist"><ul><li><p>Corroutines</p></li><li><p>Autoselection of primitive or Object</p></li><li><p>Reified Generics</p></li><li><p>Clear Co/Contra-variance for Generics</p></li><li><p>Sealed Classes</p></li><li><p>Rich collections (and creation)</p></li><li><p>Easy ranges</p></li><li><p>Operator overloading and infix methods</p></li><li><p>Much richer type system</p></li><li><p>Type aliases</p></li><li><p>Most statements are expressions (<code>if</code>, <code>try</code>, etc.)</p></li><li><p>etc&#8230;&#8203;</p></li></ul></div></section>
+<section id="resources"><h2>Resources</h2><div class="ulist"><ul><li><p>Kotlin main docs: <a href="https://kotlinlang.org/docs/reference/" class="bare">https://kotlinlang.org/docs/reference/</a></p></li><li><p>Josh Bloch&#8217;s Effective Java: <a href="https://www.amazon.com/Effective-Java-Joshua-Bloch-ebook/dp/B00B8V09HY/" class="bare">https://www.amazon.com/Effective-Java-Joshua-Bloch-ebook/dp/B00B8V09HY/</a></p></li></ul></div></section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/lib/js/head.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/js/reveal.js"></script><script>// See https://github.com/hakimel/reveal.js#configuration for a full list of configuration options
 Reveal.initialize({
   // Display controls in the bottom right corner
   controls: true,
@@ -152,7 +424,7 @@ Reveal.initialize({
   // The "normal" size of the presentation, aspect ratio will be preserved
   // when the presentation is scaled to fit different resolutions. Can be
   // specified using percentage units.
-  width: "1024",
+  width: "1200",
   height: "768",
 
   // Factor of the display size that should remain empty around the content
