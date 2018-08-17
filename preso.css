@@ -29,14 +29,15 @@ div.smaller {
   line-height: normal;
 }
 
-#just_the_start ul, #sensible_defaults ul {
-    columns: 2;
-    -webkit-columns: 2;
-    -moz-columns: 2;
-    column-gap: 2em;
-    -webkit-column-gap: 2em;
-    -moz-column-gap: 2em;
-    list-style-position: outside;
+.twocol ul,
+#dynamic_and_pragmatic_groovy > div.ulist > ul {
+  columns: 2;
+  -webkit-columns: 2;
+  -moz-columns: 2;
+  column-gap: 2em;
+  -webkit-column-gap: 2em;
+  -moz-column-gap: 2em;
+  list-style-position: outside;
 }
 
 .license {
@@ -44,9 +45,12 @@ div.smaller {
   line-height: normal;
 }
 
-/*
+
+/****************************
+ *
  * Source code formatting
- */
+ *
+ ****************************/
 
 .hljs {
   display: block;

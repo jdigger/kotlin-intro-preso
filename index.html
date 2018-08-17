@@ -11,10 +11,17 @@ document.getElementsByTagName( 'head' )[0].appendChild( link );</script><!--[if 
 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Jim J. Moore</span> is licensed under
 a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.<br />
 Presentation source at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/jdigger/kotlin-intro-preso" rel="dct:source">https://github.com/jdigger/kotlin-intro-preso</a></p></div></div></section>
+<section id="motivations"><h2>Motivations</h2><div class="ulist"><ul><li><p>Statically typed (JVM and JS)</p></li><li><p>Safe, concise, great interop</p></li><li><p>Functional and OO paradigms</p></li><li><p>Focus on pragmatism</p></li></ul></div></section>
+<section id="swift" data-background-image="images/Swift_logo.png" data-background-size="contain">
+<aside class="notes"><div class="paragraph"><p>Swift and Kotlin look and feel a LOT alike. Different use-cases, though. Kotlin for JVM/Android and Swift for iOS. Otherwise things are more in the air.</p></div></aside></section>
+<section id="so_many_nice_languages"><div class="quoteblock"><blockquote>We&#8217;ve built tools to support so many nice languages, and we’re still using Java</blockquote><div class="attribution">&#8212; JetBrains in 2010</div></div></section>
+<section id="major_jvm_alternatives_to_the_jls"><h2>Major JVM Alternatives to the JLS</h2></section>
+<section id="dynamic_and_pragmatic_groovy"><h2>Dynamic and Pragmatic: Groovy</h2><div class="ulist"><ul><li><p>trivial on-ramp from Java</p><div class="ulist"><ul><li><p><code>.java</code> &#8594; <code>.groovy</code></p></li></ul></div></li><li><p>build Java conventions (e.g., Beans) into language support</p><div class="ulist"><ul><li><p>the focus was always &#8220;how do we make programmer&#8217;s lives easier?&#8221; over &#8220;purity&#8221;</p></li></ul></div></li><li><p>very sophisticated (almost Lisp-level) meta-programming capabilities</p></li><li><p>static compilation when you want it, dynamic otherwise</p></li><li><p>first major JVM language to have closures, seamless collections support, etc.</p></li></ul></div></section>
+<section id="groovy_problems"><h2>Groovy Problems</h2><div class="ulist"><ul><li><p>that focus on experimentation/pragmatism over purity led to some problems over time</p></li><li><p>dynamic groovy isn&#8217;t fast enough for scripts (starting the JVM), too slow for many server tasks, and not safe enough for &#8220;large&#8221; systems</p><div class="ulist"><ul><li><p>&#8220;too slow&#8221; changed over time, especially when the JVM added &#8220;indy&#8221; support and better GC</p></li></ul></div></li><li><p><code>@CompileStatic</code> let it be a better Java, but a handcuffed Groovy</p></li></ul></div></section>
+<section id="functional_hybrid_scala"><h2>Functional Hybrid: Scala</h2><div class="ulist"><ul><li><p>strongly encourages &#8220;true&#8221; Functional programming</p><div class="ulist"><ul><li><p>allows ready &#8220;escape valves&#8221; for imperitive programming for Java interop, performance, or just because that&#8217;s what&#8217;s understood</p></li></ul></div></li><li><p>deep and rich type system allow for much more &#8220;provably correct&#8221; systems</p></li><li><p>moves a tremendous amount of work away from the programmer and to the compiler</p></li><li><p>the FP focus and strong type systems make it a natural home for big data processing, complex concurrent systems, etc.</p></li></ul></div></section>
+<section id="scala_problems"><h2>Scala Problems</h2><div class="ulist"><ul><li><p>the conceptual overhead can be tough for people without a Masters in Category Theory</p><div class="ulist"><ul><li><p>if you don&#8217;t grok currying the monads, it can be tough slogging</p></li></ul></div></li><li><p>&#8220;wrap all the things; then wrap them again&#8221;</p><div class="ulist"><ul><li><p>converting between types (especially for Java interop) involves a lot of wrapping and unwrapping</p></li></ul></div></li><li><p>between all the symbols and non-intuative rules (e.g. <code>::</code>) it can take a while to get used to</p></li><li><p>compilation can be <strong><em>slooow</em></strong> and binary incompatability</p></li></ul></div></section>
 <section id="java_puzzlers_click_and_hack"><div class="imageblock plain" style=""><img src="images/click_and_hack_java_puzzlers.jpg" alt="click and hack java puzzlers"></div>
 <aside class="notes"><div class="paragraph"><p>Neal Gafter and Joshua Bloch at JavaOne 2003 doing Java Puzzlers. Held in the largest room San Fransisco&#8217;s Moscone Center had&#8201;&#8212;&#8201;standing room only&#8201;&#8212;&#8201;and if you were late you still couldn&#8217;t get in.</p></div></aside></section>
-<section id="motivations"><h2>Motivations</h2><div class="ulist"><ul><li><p>Statically typed (JVM and JS)</p></li><li><p>Safe, concise, great interop</p></li><li><p>Functional and OO paradigms</p></li><li><p>Focus on pragmatism</p></li></ul></div></section>
-<section id="so_many_nice_languages"><div class="quoteblock"><blockquote>We&#8217;ve built tools to support so many nice languages, and we’re still using Java</blockquote><div class="attribution">&#8212; JetBrains in 2010</div></div></section>
 <section id="effective_java" data-background-image="images/EffectiveJava.jpg" data-background-size="contain"></section>
 <section id="example_kotlin"><h2>Example Kotlin</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">class Person(val firstName: String, val lastName: String) {
     val fullName get() = "$firstName $lastName"
@@ -74,6 +81,17 @@ public Person(@NotNull String firstName, @NotNull String lastName) {
     this.lastName = lastName;
 }</code></pre></div></div>
 <div class="quoteblock"><blockquote>Item 15: Minimize Mutability</blockquote><div class="attribution">&#8212; Effective Java</div></div></section>
+<section id="collections_mutability"><h2>Collections Mutability</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">val list = listOf("a", "b")
+// list.add("c") &lt;- compiller error
+println("list instance " + list.javaClass)
+// list instance class java.util.Arrays$ArrayList
+
+// (list as java.util.List&lt;String&gt;).add("c") &lt;- throws java.lang.UnsupportedOperationException
+
+val mlist = mutableListOf("a", "b")
+mlist.add("c")
+println("mlist instance " + mlist.javaClass)
+// mlist instance class java.util.ArrayList</code></pre></div></div></section>
 <section id="regular_properties"><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="java language-java">@NotNull
 private final String firstName;
 
@@ -87,11 +105,12 @@ public final String getFirstName() {
 public final String getFullName() {
     return this.firstName + ' ' + this.lastName;
 }</code></pre></div></div></section>
-<section id="sensible_defaults"><h2>Sensible Defaults</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">class Person(val firstName: String, val lastName: String) {
+<section id="sensible_class_defaults"><h2>Sensible Class Defaults</h2></section>
+<section id="the_sensible_class_defaults"><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">class Person(val firstName: String, val lastName: String) {
     val fullName get() = "$firstName $lastName"
 }</code></pre></div></div>
-<div class="ulist"><ul><li><p>Kotlin auto-hides (makes private) a class&#8217;s internals (e.g., fields)</p></li><li><p>The default visibility is <code>public</code></p></li><li><p>The default way of accessing a class&#8217;s data is through its properties (getters and setters)</p></li><li><p>The default for classes, fields, methods, local variables, etc. is to be <code>final</code></p></li><li><p>The default constructor makes sure the class is fully initialized</p></li><li><p>Exceptions are &#8220;runtime&#8221;</p></li></ul></div></section>
-<section id="but_what_about_equals_hashcode_etc"><h2>But What About equals() hashCode() etc?</h2><div class="paragraph"><p>Aren&#8217;t there &#8220;sensible defaults&#8221; for those too?</p></div></section>
+<div class="ulist twocol"><ul class="twocol"><li><p>Kotlin auto-hides (makes private) a class&#8217;s internals (e.g., fields)</p></li><li><p>The default visibility is <code>public</code></p></li><li><p>The default way of accessing a class&#8217;s data is through its properties (getters and setters)</p></li><li><p>The default for classes, fields, methods, local variables, etc. is to be <code>final</code></p></li><li><p>The default constructor makes sure the class is fully initialized</p></li><li><p>Exceptions are &#8220;runtime&#8221;</p></li></ul></div></section>
+<section id="but_what_about_code_equals_code_code_hashcode_code_etc"><h2>But What About <code>equals()</code> <code>hashCode()</code> etc?</h2><div class="paragraph"><p>Aren&#8217;t there &#8220;sensible defaults&#8221; for those too?</p></div></section>
 <section id="kotlin_data_class"><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">data class Person(val firstName: String, val lastName: String) {
     val fullName get() = "$firstName $lastName"
 }</code></pre></div></div></section>
@@ -151,12 +170,14 @@ public static Person copy$default(Person var0, String var1, String var2, int var
     return var0.copy(var1, var2);
 }</code></pre></div></div></section>
 <section id="lombok"><div class="paragraph"><p>All that&#8217;s cool, but I can get most of that with <a href="https://projectlombok.org/features/all">Project Lombok</a>&#8230;&#8203;</p></div></section>
-<section id="kotlin_form_of_that_copy_method"><h2>Kotlin form of that copy method</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">fun copy(firstName: String = this.firstName,
+<section id="kotlin_form_of_that_copy_method"><h2>Kotlin form of that copy method</h2><div class="paragraph"><p>Kotlin has named parameters and parameter defaults. The Kotlin form of that copy method is actually</p></div>
+<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">fun copy(firstName: String = this.firstName,
          lastName: String = this.lastName) =
     Person(firstName, lastName)</code></pre></div></div>
 <div class="paragraph"><p>which means I can write</p></div>
 <div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">val jimMoore = Person("Jim", "Moore")
-val kellyMoore = jimMoore.copy(firstName = "Kelly")</code></pre></div></div></section>
+val kellyMoore = jimMoore.copy(firstName = "Kelly")
+val jim2 = jimMoore.copy() // silly "defensive copy", since immutable</code></pre></div></div></section>
 <section id="destructuring"><div class="paragraph"><p>The <code>componentN</code> methods allow for "destructuring"</p></div>
 <div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">val jimMoore = Person("Jim", "Moore")
 val (fn, ln) = jimMoore
@@ -169,6 +190,16 @@ val lastNames = people.map { (_, lastName) -&gt; lastName }</code></pre></div></
          lastName: String = this.lastName) =
     Person(firstName, lastName)</code></pre></div></div>
 <div class="ulist"><ul><li><p>It looks like an expression because it is: there&#8217;s a <strong><em>heavy</em></strong> preference for expressions over statements</p></li><li><p>The return type can be specified, but it&#8217;s infered from the RHS (Right Hand Side) since <a href="https://en.wikipedia.org/wiki/Sides_of_an_equation">equality is symetric</a></p></li></ul></div></section>
+<section id="can_you_spot_the_java_bug"><h2>Can You Spot the Java Bug?</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="java language-java">public static void printIncOne(Integer i) {
+    System.out.println(i + 1);
+}</code></pre></div></div></section>
+<section id="invoke_the_method"><h2>Invoke the Method</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="java language-java">public static void printIncOne(Integer i) {
+    System.out.println(i + 1); // throws NullPointerException
+}
+
+public static void main(String[] args) {
+    printIncOne(null);
+}</code></pre></div></div></section>
 <section id="nulls_2"><h2>Nulls</h2></section>
 <section id="null_is_a_first_class_part_of_the_type_system"><h2>Null is a first-class part of the type system</h2><div class="ulist"><ul><li><p>Similar to <code>null</code> in SQL, it&#8217;s not &#8220;just another value&#8221; but truly &#8220;the absense of a value&#8221;</p></li><li><p>If a value may have a null, its type-specification <strong><em>MUST</em></strong> declare that; otherwise it&#8217;s not allowed</p></li><li><p><a href="https://kotlinlang.org/docs/reference/null-safety.html">The Kotlin docs has a simple write-up on Null Safety</a> and how to work with it</p></li></ul></div></section>
 <section id="null_idiom_example"><h2>Null Idiom Example</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">val files = File("Test").listFiles() // Array&lt;out File&gt;?
@@ -177,26 +208,29 @@ println(files?.size ?: "empty")</code></pre></div></div>
 <div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="java language-java">File[] files = (new File("Test")).listFiles();
 Object var2 = files != null ? files.length : "empty";
 System.out.println(var2);</code></pre></div></div></section>
-<section id="execution_in_the_kingdom_of_nouns"><div class="paragraph"><p><a href="https://steve-yegge.blogspot.com/2006/03/execution-in-kingdom-of-nouns.html">Execution In the Kingdom of Nouns</a></p></div>
-<div class="paragraph"><p>"`&#8230;&#8203; In the Kingdom of Javaland, where King Java rules with a silicon fist, people aren&#8217;t allowed to think the way
-you and I do.</p></div>
-<div class="paragraph"><p>In Javaland, you see, nouns are very important, by order of the King himself. Nouns are the most
-important citizens in the Kingdom.</p></div>
-<div class="paragraph"><p>They parade around looking distinguished in their showy finery, which is provided
-by the Adjectives, who are quite relieved at their lot in life. The Adjectives are nowhere near as high-class as
-the Nouns, but they consider themselves quite lucky that they weren&#8217;t born Verbs&#8230;&#8203;`"</p></div></section>
-<section id="functions_are_free"><h2>Functions are &#8220;Free&#8221;</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">fun noClassFunction() = "Look, Ma!"
+<section id="kotlin_version_of_code_incrone_code"><h2>Kotlin Version of <code>incrOne</code></h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">fun incrOne(i: Int) {
+    println(i + 1)
+}
 
-class AClass {
-    fun doSomething() {
-        fun anotherFun() {
-            println(noClassFunction())
-        }
-        anotherFun()
+fun incrOneNullable(i: Int?) {
+    println(i + 1) // &lt;- compiler error
+    if (i != null) {
+        println(i + 1)
     }
-}</code></pre></div></div>
-<div class="paragraph smaller"><p>Not everyone is quite ready for such liberty, and King Java can still interact with such free-born verbs.
-While in his land they are bound to artificial containers, such as a &#8220;package class.&#8221;</p></div></section>
+}</code></pre></div></div></section>
+<section id="kotlin_code_incrone_code_java"><h2>Kotlin <code>incrOne</code> &#8594; Java</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="java language-java">public static final void incrOne(int i) {
+    int var1 = i + 1;
+    System.out.println(var1);
+}
+
+public static final void incrOneNullable(@Nullable Integer i) {
+    if (i != null) {
+        int var1 = i + 1;
+        System.out.println(var1);
+    }
+}</code></pre></div></div></section>
+<section id="let_the_compiler_do_the_work"><h2>Let the Compiler Do the Work</h2><div class="paragraph"><p>Kotlin has no &#8220;primative&#8221; types, but gives you the benefits of them while also providing the richness of objects</p></div>
+<div class="imageblock plain" style=""><img src="images/one_option.jpg" alt="one option"></div></section>
 <section id="singletons_and_companion_objects"><h2>Singletons and Companion Objects</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">class AClass {
     companion object {
         fun foo() {}
@@ -212,6 +246,27 @@ fun aFun() {
         override fun close() {}
     })
 }</code></pre></div></div></section>
+<section id="objects_are_cool_and_all_but"><h2>Objects are Cool and All, But&#8230;&#8203;</h2></section>
+<section id="execution_in_the_kingdom_of_nouns"><div class="paragraph"><p><a href="https://steve-yegge.blogspot.com/2006/03/execution-in-kingdom-of-nouns.html">Execution In the Kingdom of Nouns</a></p></div>
+<div class="paragraph"><p>"&#8230;&#8203; In the Kingdom of Javaland, where King Java rules with a silicon fist, people aren&#8217;t allowed to think the way
+you and I do.</p></div>
+<div class="paragraph"><p>In Javaland, you see, nouns are very important, by order of the King himself. Nouns are the most
+important citizens in the Kingdom.</p></div>
+<div class="paragraph"><p>They parade around looking distinguished in their showy finery, which is provided
+by the Adjectives, who are quite relieved at their lot in life. The Adjectives are nowhere near as high-class as
+the Nouns, but they consider themselves quite lucky that they weren&#8217;t born Verbs&#8230;&#8203;"</p></div></section>
+<section id="functions_verbs_are_free"><h2>Functions (Verbs) are &#8220;Free&#8221;</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">fun noClassFunction() = "Look, Ma!"
+
+class AClass {
+    fun doSomething() {
+        fun anotherFun() {
+            println(noClassFunction())
+        }
+        anotherFun()
+    }
+}</code></pre></div></div>
+<div class="paragraph smaller"><p>Not everyone is quite ready for such liberty, and King Java can still interact with such free-born verbs.
+While in his land they are bound to artificial containers, such as a &#8220;package class.&#8221;</p></div></section>
 <section id="extending_classes"><h2>Extending Classes</h2><div class="paragraph"><p>Often the class definitions we&#8217;re given are insufficient, leading to creating zillions of &#8220;Utils&#8221; classes</p></div></section>
 <section id="extending_classes_static"><div class="paragraph"><p>Static languages like Scala allow for &#8220;implicit types&#8221; to allow for easy conversions between
 types (typically by wrapping)</p></div></section>
@@ -304,6 +359,7 @@ public class AClass {
 <div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">println("something".run {
     capitalize() + " is afoot"
 }) // prints "Something is afoot"</code></pre></div></div></section>
+<section id="composition_over_inheritance"><div class="quoteblock"><blockquote>Item 16 : Favor composition Over Inheritance</blockquote><div class="attribution">&#8212; Effective Java</div></div></section>
 <section id="delegation"><h2>Delegation</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="kotlin language-kotlin">interface Base {
     fun print()
 }
@@ -351,7 +407,7 @@ fun main(args: Array&lt;String&gt;) {
     is Int -&gt; x % 2  == 1
     else -&gt; false
 }</code></pre></div></div></section>
-<section id="just_the_start"><h2>Just the Start</h2><div class="ulist"><ul><li><p>Corroutines</p></li><li><p>Autoselection of primitive or Object</p></li><li><p>Reified Generics</p></li><li><p>Clear Co/Contra-variance for Generics</p></li><li><p>Sealed Classes</p></li><li><p>Rich collections (and creation)</p></li><li><p>Easy ranges</p></li><li><p>Operator overloading and infix methods</p></li><li><p>Much richer type system</p></li><li><p>Type aliases</p></li><li><p>Most statements are expressions (<code>if</code>, <code>try</code>, etc.)</p></li><li><p>etc&#8230;&#8203;</p></li></ul></div></section>
+<section id="just_the_start"><h2>Just the Start</h2><div class="ulist twocol"><ul class="twocol"><li><p>Coroutines</p></li><li><p>Reified Generics</p></li><li><p>Clear Co/Contra-variance</p></li><li><p>Sealed Classes</p></li><li><p>Rich collections (and creation)</p></li><li><p>Easy ranges</p></li><li><p>Operator overloading and infix methods</p></li><li><p>Type aliases</p></li><li><p>Most statements are expressions (<code>if</code>, <code>try</code>, etc.)</p></li><li><p>Tail recursion</p></li><li><p>etc&#8230;&#8203;</p></li></ul></div></section>
 <section id="resources"><h2>Resources</h2><div class="ulist"><ul><li><p>Kotlin main docs: <a href="https://kotlinlang.org/docs/reference/" class="bare">https://kotlinlang.org/docs/reference/</a></p></li><li><p>Josh Bloch&#8217;s Effective Java: <a href="https://www.amazon.com/Effective-Java-Joshua-Bloch-ebook/dp/B00B8V09HY/" class="bare">https://www.amazon.com/Effective-Java-Joshua-Bloch-ebook/dp/B00B8V09HY/</a></p></li></ul></div></section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/lib/js/head.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/js/reveal.js"></script><script>// See https://github.com/hakimel/reveal.js#configuration for a full list of configuration options
 Reveal.initialize({
   // Display controls in the bottom right corner
